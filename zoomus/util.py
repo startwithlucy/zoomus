@@ -1,6 +1,5 @@
 """Utility classes and functions"""
 
-import json
 import requests
 import time
 import jwt
@@ -85,15 +84,11 @@ class ApiClient(object):
 
         :param endpoint: The endpoint
         :param params: The URL parameters
-        :param data: The data (either as a dict or dumped JSON string) to
-                     include with the POST
+        :param data: The data as a dict to include with the POST
         :param headers: request headers
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not isinstance(data, str):
-            data = json.dumps(data)
-
         if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
 
@@ -112,15 +107,11 @@ class ApiClient(object):
 
         :param endpoint: The endpoint
         :param params: The URL parameters
-        :param data: The data (either as a dict or dumped JSON string) to
-                     include with the PATCH
+        :param data: The data as a dict to include with the PATCH
         :param headers: request headers
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not isinstance(data, str):
-            data = json.dumps(data)
-
         if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
 
@@ -139,15 +130,11 @@ class ApiClient(object):
 
         :param endpoint: The endpoint
         :param params: The URL parameters
-        :param data: The data (either as a dict or dumped JSON string) to
-                     include with the DELETE
+        :param data: The data as a dict to include with the DELETE
         :param headers: request headers
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not isinstance(data, str):
-            data = json.dumps(data)
-
         if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
 
