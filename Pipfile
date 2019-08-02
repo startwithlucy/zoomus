@@ -8,8 +8,6 @@ flake8 = "*"
 bumpversion = "*"
 
 [packages]
-nose = "==1.3.7"
-selenium = "==2.48.0"
 requests = "==2.20.0"
 PyJWT = "==1.7.0"
 
