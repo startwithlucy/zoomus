@@ -100,7 +100,7 @@ class ApiClient(object):
         return requests.post(
             self.url_for(endpoint),
             params=params,
-            data=data,
+            json=data,
             headers=headers,
             cookies=cookies,
             timeout=self.timeout,
@@ -127,7 +127,7 @@ class ApiClient(object):
         return requests.patch(
             self.url_for(endpoint),
             params=params,
-            data=data,
+            json=data,
             headers=headers,
             cookies=cookies,
             timeout=self.timeout,
@@ -154,7 +154,7 @@ class ApiClient(object):
         return requests.delete(
             self.url_for(endpoint),
             params=params,
-            data=data,
+            json=data,
             headers=headers,
             cookies=cookies,
             timeout=self.timeout,
