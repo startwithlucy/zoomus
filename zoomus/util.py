@@ -1,8 +1,5 @@
 """Utility classes and functions"""
 
-from __future__ import absolute_import
-
-import contextlib
 import json
 import requests
 import time
@@ -17,7 +14,7 @@ class ApiClient(object):
 
         :param base_uri: The base URI to the API
         :param timeout: The timeout to use for requests
-        :param \*\*kwargs: Any other attributes. These will be added as
+        :param kwargs: Any other attributes. These will be added as
                            attributes to the ApiClient object.
         """
         self.base_uri = base_uri
@@ -36,7 +33,7 @@ class ApiClient(object):
         if value is not None:
             try:
                 value = int(value)
-            except:
+            except ValueError:
                 raise ValueError("timeout value must be an integer")
         self._timeout = value
 
@@ -72,13 +69,15 @@ class ApiClient(object):
         :param headers: request headers
         :return: The :class:``requests.Response`` object for this request
         """
-        if headers is None and self.config.get('version') == 2:
+        if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
+
         return requests.get(
             self.url_for(endpoint),
             params=params,
             headers=headers,
-            timeout=self.timeout)
+            timeout=self.timeout,
+        )
 
     def post_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
@@ -92,17 +91,20 @@ class ApiClient(object):
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not is_str_type(data):
+        if data and not isinstance(data, str):
             data = json.dumps(data)
-        if headers is None and self.config.get('version') == 2:
+
+        if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
+
         return requests.post(
             self.url_for(endpoint),
             params=params,
             data=data,
             headers=headers,
             cookies=cookies,
-            timeout=self.timeout)
+            timeout=self.timeout,
+        )
 
     def patch_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
@@ -116,17 +118,20 @@ class ApiClient(object):
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not is_str_type(data):
+        if data and not isinstance(data, str):
             data = json.dumps(data)
-        if headers is None and self.config.get('version') == 2:
+
+        if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
+
         return requests.patch(
             self.url_for(endpoint),
             params=params,
             data=data,
             headers=headers,
             cookies=cookies,
-            timeout=self.timeout)
+            timeout=self.timeout,
+        )
 
     def delete_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
@@ -140,44 +145,20 @@ class ApiClient(object):
         :param cookies: request cookies
         :return: The :class:``requests.Response`` object for this request
         """
-        if data and not is_str_type(data):
+        if data and not isinstance(data, str):
             data = json.dumps(data)
-        if headers is None and self.config.get('version') == 2:
+
+        if headers is None:
             headers = {'Authorization': 'Bearer {}'.format(self.config.get('token'))}
+
         return requests.delete(
             self.url_for(endpoint),
             params=params,
             data=data,
             headers=headers,
             cookies=cookies,
-            timeout=self.timeout)
-
-
-@contextlib.contextmanager
-def ignored(*exceptions):
-    """Simple context manager to ignore expected Exceptions
-
-    :param \*exceptions: The exceptions to safely ignore
-    """
-    try:
-        yield
-    except exceptions:
-        pass
-
-
-def is_str_type(val):
-    """Check whether the input is of a string type.
-
-    We use this method to ensure python 2-3 capatibility.
-
-    :param val: The value to check wither it is a string
-    :return: In python2 it will return ``True`` if :attr:`val` is either an
-             instance of str or unicode. In python3 it will return ``True`` if
-             it is an instance of str
-    """
-    with ignored(NameError):
-        return isinstance(val, basestring)
-    return isinstance(val, str)
+            timeout=self.timeout,
+        )
 
 
 def require_keys(d, keys, allow_none=True):
@@ -191,7 +172,7 @@ def require_keys(d, keys, allow_none=True):
     :raises:
         :ValueError: If any of the keys are missing from the obj
     """
-    if is_str_type(keys):
+    if isinstance(keys, str):
         keys = [keys]
     for k in keys:
         if k not in d:

@@ -1,10 +1,11 @@
 """Zoom.us REST API Python Client Components"""
 
-from __future__ import absolute_import
+__all__ = ['meeting', 'recording', 'report', 'user', 'webinar']
 
 from . import (
     meeting,
     recording,
     report,
     user,
-    webinar)
+    webinar,
+)

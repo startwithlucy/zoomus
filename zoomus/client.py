@@ -1,7 +1,5 @@
 """Zoom.us REST API Python Client"""
 
-from __future__ import absolute_import
-
 from zoomus import (
     components,
     util)
@@ -10,51 +8,36 @@ from zoomus import (
 class ZoomClient(util.ApiClient):
     """Zoom.us REST API Python Client"""
 
-    BASE_URI_V1 = 'https://api.zoom.us/v1'
-    BASE_URI_V2 = 'https://api.zoom.us/v2'
-    """Base URL for Zoom API"""
+    BASE_URI = 'https://api.zoom.us/v2'
 
-    def __init__(
-            self, api_key, api_secret, data_type='json', timeout=15, version=1):
+    def __init__(self, api_key, api_secret, timeout=15):
         """Create a new Zoom client
 
         :param api_key: The Zooom.us API key
         :param api_secret: The Zoom.us API secret
-        :param data_type: The expected return data type. Either 'json' or 'xml'
         :param timeout: The time out to use for API requets
         """
-        BASE_URI = ZoomClient.BASE_URI_V1 if version == 1 else ZoomClient.BASE_URI_V2
-
-        super(ZoomClient, self).__init__(
-            base_uri=BASE_URI, timeout=timeout)
+        super().__init__(base_uri=self.BASE_URI, timeout=timeout)
 
         # Setup the config details
         self.config = {
             'api_key': api_key,
             'api_secret': api_secret,
-            'data_type': data_type,
-            'version': version,
             'token': util.generate_jwt(api_key, api_secret),
         }
 
-        class_user_component = components.user.UserComponent if version == 1 else components.user.UserComponentV2
-        class_meeting_component = components.meeting.MeetingComponent if version == 1 else components.meeting.MeetingComponentV2
-        class_recording_component = components.recording.RecordingComponent if version == 1 else components.recording.RecordingComponentV2
-        class_webinar_component = components.webinar.WebinarComponent if version == 1 else components.webinar.WebinarComponentV2
-        class_report_component = components.report.ReportComponent if version == 1 else components.report.ReportComponentV2
-
         # Register all of the components
         self.components = {
-            'meeting': class_meeting_component(
-                base_uri=BASE_URI, config=self.config),
-            'report': class_report_component(
-                base_uri=BASE_URI, config=self.config),
-            'user': class_user_component(
-                base_uri=BASE_URI, config=self.config),
-            'webinar': class_webinar_component(
-                base_uri=BASE_URI, config=self.config),
-            'recording': class_recording_component(
-                base_uri=BASE_URI, config=self.config)
+            'meeting': components.meeting.MeetingComponent(
+                base_uri=self.BASE_URI, config=self.config),
+            'report': components.report.ReportComponent(
+                base_uri=self.BASE_URI, config=self.config),
+            'user': components.user.UserComponent(
+                base_uri=self.BASE_URI, config=self.config),
+            'webinar': components.webinar.WebinarComponent(
+                base_uri=self.BASE_URI, config=self.config),
+            'recording': components.recording.RecordingComponent(
+                base_uri=self.BASE_URI, config=self.config)
         }
 
     def __enter__(self):
