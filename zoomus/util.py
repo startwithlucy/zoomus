@@ -1,8 +1,26 @@
 """Utility classes and functions"""
 
+import functools
 import requests
 import time
 import jwt
+
+from zoom import exceptions
+
+__all__ = ['ApiClient']
+
+
+def handle_request_error(request_method):
+    @functools.wraps(request_method)
+    def inner(*args, **kwargs):
+        response = request_method(*args, **kwargs)
+
+        if not response.ok:
+            raise exceptions.ZoomException(response)
+
+        return response
+
+    return inner
 
 
 class ApiClient(object):
@@ -60,6 +78,7 @@ class ApiClient(object):
             endpoint = endpoint[:-1]
         return self.base_uri + endpoint
 
+    @handle_request_error
     def get_request(self, endpoint, params=None, headers=None):
         """Helper function for GET requests
 
@@ -78,6 +97,7 @@ class ApiClient(object):
             timeout=self.timeout,
         )
 
+    @handle_request_error
     def post_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
         """Helper function for POST requests
@@ -101,6 +121,7 @@ class ApiClient(object):
             timeout=self.timeout,
         )
 
+    @handle_request_error
     def patch_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
         """Helper function for PATCH requests
@@ -124,6 +145,7 @@ class ApiClient(object):
             timeout=self.timeout,
         )
 
+    @handle_request_error
     def delete_request(
             self, endpoint, params=None, data=None, headers=None, cookies=None):
         """Helper function for DELETE requests
