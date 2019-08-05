@@ -15,7 +15,9 @@ def handle_request_error(request_method):
     def inner(*args, **kwargs):
         response = request_method(*args, **kwargs)
 
-        if not response.ok:
+        # zoom uses custom status codes above 600 to indicate errors
+        # response.ok only checks between 400 and 600 so we need to do a manual check
+        if response.status_code >= 400:
             raise exceptions.ZoomException(response)
 
         return response
