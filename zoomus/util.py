@@ -5,7 +5,7 @@ import requests
 import time
 import jwt
 
-from zoom import exceptions
+from zoomus import exceptions
 
 __all__ = ['ApiClient']
 
