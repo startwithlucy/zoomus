@@ -13,13 +13,15 @@ class UserComponent(base.BaseComponent):
 
     def update(self, **kwargs):
         util.require_keys(kwargs, 'id')
+        user_id = kwargs.pop('id')
 
-        return self.patch_request(f"/users/{kwargs['id']}", data=kwargs)
+        return self.patch_request(f"/users/{user_id}", data=kwargs)
 
     def delete(self, **kwargs):
         util.require_keys(kwargs, 'id')
+        user_id = kwargs.pop('id')
 
-        return self.delete_request(f"/users/{kwargs['id']}", params=kwargs)
+        return self.delete_request(f"/users/{user_id}", params=kwargs)
 
     def retrieve(self, **kwargs):
         util.require_keys(kwargs, 'id')
