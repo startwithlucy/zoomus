@@ -9,7 +9,7 @@ bumpversion = "*"
 
 [packages]
 requests = "==2.20.0"
-PyJWT = "==1.7.0"
+pyjwt = "==2.4.0"
 
 [requires]
 python_version = "3.7"

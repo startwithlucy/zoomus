@@ -217,4 +217,4 @@ def generate_jwt(key, secret):
     }
 
     token = jwt.encode(payload, secret, algorithm='HS256', headers=header)
-    return token.decode('utf-8')
+    return token
